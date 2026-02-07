@@ -72,13 +72,32 @@ resource "helm_release" "alb_controller" {
   # 필요하면 고정 버전 (예: 1.7.2)
   # version = "1.7.2"
 
-  set { name = "clusterName", value = var.eks_cluster_name }
-  set { name = "region",      value = var.aws_region }
-  set { name = "vpcId",       value = var.vpc_id }
+  set {
+    name  = "clusterName"
+    value = var.eks_cluster_name
+  }
+
+  set {
+    name  = "region"
+    value = var.aws_region
+  }
+
+  set {
+    name  = "vpcId"
+    value = var.vpc_id
+  }
 
   # IRSA: ServiceAccount 생성 + role-arn 주입
-  set { name = "serviceAccount.create", value = "true" }
-  set { name = "serviceAccount.name",   value = local.sa_name }
+  set {
+    name  = "serviceAccount.create"
+    value = "true"
+  }
+
+  set {
+    name  = "serviceAccount.name"
+    value = local.sa_name
+  }
+
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = aws_iam_role.alb_controller.arn
