@@ -17,8 +17,7 @@ resource "aws_iam_openid_connect_provider" "eks" {
   thumbprint_list = [data.tls_certificate.eks_oidc.certificates[0].sha1_fingerprint]
 }
 
-# “EKS OIDC Provider가 발급한 토큰 중에서도, 특정 네임스페이스의 특정 ServiceAccount(sub)만 이 IAM Role을 IRSA(IAM Roles for Service Accounts)로 Assume할 수 있다”는 신뢰 정책을 만든다.
-data "aws_iam_policy_document" "alb_assume_role" {
+# EKS 클러스터의 OIDC issuer가 서명해 발급한 ServiceAccount 토큰(WebIdentity) 중에서도, 특정 네임스페이스의 특정 ServiceAccount(sub)에서 나온 토큰만 이 IAM Role을 sts:AssumeRoleWithWebIdentity로 Assume할 수 있도록 하는 신뢰 정책을 만든다.
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRoleWithWebIdentity"]
